@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fft-js": "0.0.12",
     "plotly": "^1.0.6"
   }
 }

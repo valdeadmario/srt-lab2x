@@ -1,4 +1,6 @@
 const plotly = require("plotly")("valdeadmario", "yaKNsI7OESXDqOmq3EQr");
+const fft = require("fft-js").fft;
+const fftUtil = require("fft-js").util;
 
 const graph = (arrX, arrY, name) => {
   const trace1 = {
@@ -82,9 +84,9 @@ const fftGenerator = x => {
   let fimage12 = new Array(halfN).fill(0);
   new Array(N / 2).fill(0);
   let fimage1 = new Array(N).fill(0);
-
+  console.log(x);
   let f = new Array(N).fill(0);
-
+  const start = new Date().getTime();
   for (let p = 0; p < halfN; p++) {
     for (let m = 0; m < halfN; m++) {
       freal11[p] += x[2 * m + 1] * Math.cos(((4 * Math.PI) / N) * p * m);
@@ -111,6 +113,15 @@ const fftGenerator = x => {
       f[p + N / 2] = (freal1[p + N / 2] ** 2 + fimage1[p + N / 2] ** 2) ** 0.5;
     }
   }
+  const end = new Date().getTime();
+  console.log(`Time in single: ${end - start}`);
+
+  const startUtil = new Date().getTime();
+  const magnitudes = fftUtil.fftMag(fft(x));
+  const endUtil = new Date().getTime();
+
+  console.log(`Time in util: ${endUtil - startUtil}`);
+  console.log(magnitudes);
 
   return f;
 };
@@ -124,9 +135,9 @@ const x = signalGeneration(n, w, N);
 const y = linspace(0, N, 1);
 
 const dft = dftGenerator(x);
-const fft = fftGenerator(x);
+const ffts = fftGenerator(x);
 
-console.log({ fft, dft });
+console.log({ ffts, dft });
 
 graph(dft, y, "dft");
-graph(fft, y, "fft");
+graph(ffts, y, "fft");
